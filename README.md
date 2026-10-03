@@ -1,14 +1,14 @@
 ﻿# Codex Usage Summary
 
-本機 Codex plug-in，仿照目前 Usage Audit 的回合結束摘要：顯示最新 task token、conversation 累積量、cache、context、tool calls、費用狀態與下一步建議。Stop Hook 自動顯示；也可用 `usage-summary` Skill 手動呼叫。無網頁 UI、HTTP server 或外部 runtime 網路請求。
+A local Codex plug-in that provides an end-of-turn summary similar to Usage Audit. It shows the latest task's token usage, cumulative conversation usage, cache, context, tool calls, cost status, and a recommended next action. The Stop Hook displays the summary automatically, and the `usage-summary` Skill can be used to request it manually. There is no web UI, HTTP server, or outbound runtime network request.
 
-## 安裝
+## Installation
 
-需求：Codex plug-in 支援、Windows/macOS/Linux、Python 3.10+。可從 GitHub 複製 repo 後，以 Codex local marketplace 安裝；步驟見 [`docs/codex-plugin.md`](docs/codex-plugin.md)。安裝 **Codex Usage Summary** 後開新 task 載入 Skill 與 Hook。
+Requirements: Codex plug-in support, Windows/macOS/Linux, and Python 3.10+. Clone the repository from GitHub and install it through a Codex local marketplace. See [`docs/codex-plugin.md`](docs/codex-plugin.md) for instructions. After installing **Codex Usage Summary**, start a new task to load the Skill and Hook.
 
-Stop Hook 需要在 Codex hooks 介面檢視並信任本機 command。若既有 Codex Usage Audit Stop Hook 同時啟用，會顯示兩份摘要；停用其中一個 Hook 可避免重複。
+Review and trust the local command in the Codex hooks interface before enabling the Stop Hook. If the existing Codex Usage Audit Stop Hook is also enabled, both hooks will display a summary. Disable either hook to avoid duplicate summaries.
 
-## 顯示格式
+## Example Output
 
 ```text
 Total: 10.2K tokens (input 9.8K / output 400) | Conversation: 23.5K
@@ -16,20 +16,20 @@ Cache: 75.0% | Context: 25.0% (64K / 256K) | Tools: task 7 / conversation 21
 Cost: N/A | Next: Summarize (context is growing)
 ```
 
-以上數值僅為格式示意。
+The values above are illustrative.
 
-本版本未整合費率卡，因此顯示 `Cost: N/A`。建議沿用明確門檻規則；context 或 task 廣度增加時會顯示 Summarize、Start fresh 或 Split task。
+This version does not include a pricing table, so it displays `Cost: N/A`. Recommendations use explicit thresholds and may suggest `Summarize`, `Start fresh`, or `Split task` as context usage or task scope grows.
 
-## 資料來源與隱私
+## Data Sources and Privacy
 
-- Hook 優先讀取 Codex Stop event 指定的 `transcript_path`；手動 Skill 依 `CODEX_THREAD_ID` 在檔名中定位。兩種方式都不猜測全域最新 conversation。
-- Rollout 位於 `CODEX_HOME`（未設定則 `%USERPROFILE%\.codex` 或 `~/.codex`）的 `sessions/` 或 `archived_sessions/`，只逐行讀取目前選中的本機 rollout。
-- 輸出只有彙總數字與建議，不輸出 prompt、回覆、工具名稱、參數或工具輸出。
-- 不修改 rollout 檔案、不寫解析快取、不啟動 server、不連外。
-- 子 agent session 不併入 conversation 累積量。
-- 對沒有 usage 記錄的 turn 不補估數字；找不到目前 thread 時 Hook 安靜略過。
+- The Hook prefers the `transcript_path` supplied by the Codex Stop event. The manual Skill locates the rollout by filename using `CODEX_THREAD_ID`. Neither method guesses which conversation is globally newest.
+- Rollouts are stored under `sessions/` or `archived_sessions/` in `CODEX_HOME` (`%USERPROFILE%\.codex` or `~/.codex` if unset). The plug-in reads only the selected local rollout, line by line.
+- Output contains only aggregate numbers and recommendations. It does not include prompts, responses, tool names, arguments, or tool output.
+- The plug-in does not modify rollout files, write parsing caches, start a server, or make network requests.
+- Sub-agent sessions are not included in cumulative conversation totals.
+- Missing usage records are not estimated. The Hook silently skips the summary if it cannot find the current thread.
 
-## 專案結構
+## Repository Structure
 
 ```text
 20261003_Codex_Usage_Summary/
@@ -43,10 +43,10 @@ Cost: N/A | Next: Summarize (context is growing)
 └── docs/
 ```
 
-## 授權
+## License
 
-本專案以 MIT License 授權，詳見 [`LICENSE`](LICENSE)。
+This project is licensed under the MIT License. See [`LICENSE`](LICENSE).
 
-## 貢獻與安全回報
+## Contributing and Security Reports
 
-貢獻方式見 [`CONTRIBUTING.md`](CONTRIBUTING.md)。安全問題請依 [`SECURITY.md`](SECURITY.md) 私下回報，請勿在公開 issue 張貼 rollout 或對話資料。
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for contribution guidelines. Report security issues privately as described in [`SECURITY.md`](SECURITY.md). Do not post rollouts or conversation data in public issues.
