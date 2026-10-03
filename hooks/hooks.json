@@ -1,0 +1,18 @@
+{
+  "description": "Display a compact local token-usage summary when a Codex turn stops.",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$PLUGIN_ROOT/plugin/scripts/usage_hook.py\" --hook",
+            "commandWindows": "py -3 \"$env:PLUGIN_ROOT\\plugin\\scripts\\usage_hook.py\" --hook",
+            "timeout": 20,
+            "statusMessage": "Summarizing local Codex usage"
+          }
+        ]
+      }
+    ]
+  }
+}
