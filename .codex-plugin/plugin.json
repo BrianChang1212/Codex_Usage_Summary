@@ -1,16 +1,15 @@
 {
   "name": "codex-usage-summary",
   "version": "0.1.0",
-  "description": "Show a compact local Codex token-usage summary automatically and on request.",
+  "description": "Show a compact local Codex token-usage summary automatically after each turn.",
   "author": {
     "name": "Brian Chang"
   },
   "license": "MIT",
-  "skills": "./skills/",
   "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "Codex Usage Summary",
     "shortDescription": "Summarize local Codex usage",
-    "longDescription": "Display a compact summary of local Codex token usage after each turn and on request. It does not expose transcript text or make network requests."
+    "longDescription": "Display a compact three-line summary of local Codex token usage after each turn. It does not expose transcript text or make network requests."
   }
 }

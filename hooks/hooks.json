@@ -6,8 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$PLUGIN_ROOT/plugin/scripts/usage_hook.py\" --hook",
-            "commandWindows": "py -3 \"$env:PLUGIN_ROOT\\plugin\\scripts\\usage_hook.py\" --hook",
+            "command": "python3 \"$PLUGIN_ROOT/plugin/scripts/usage_hook.py\"",
+            "commandWindows": "py -3 \"$env:PLUGIN_ROOT\\plugin\\scripts\\usage_hook.py\"",
             "timeout": 20,
             "statusMessage": "Summarizing local Codex usage"
           }

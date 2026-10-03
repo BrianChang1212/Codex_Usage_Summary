@@ -1,25 +1,25 @@
-# 用量資料與計算方式
+# Usage Data and Calculation
 
-Stop Hook 讀取 Codex hook event 提供的 `transcript_path` 與 `session_id`，並確認路徑在 `CODEX_HOME`（未設定時使用 `%USERPROFILE%\.codex` 或 `~/.codex`）底下的 `sessions/` 或 `archived_sessions/`。手動摘要依 `CODEX_THREAD_ID` 在檔名中定位。只讀取目前 thread，不合併 sub-agent session。
+The Stop Hook reads `transcript_path` and `session_id` from the Codex hook event. It verifies that the path is under `sessions/` or `archived_sessions/` within `CODEX_HOME` (defaults to `%USERPROFILE%\\.codex` or `~/.codex`). It reads only the current thread and does not combine sub-agent sessions.
 
-## 摘要範圍
+## Summary Scope
 
-- Task 用量：所選 rollout 中最新一個有 token usage 的 turn。
-- Conversation 用量：所選 rollout 所有已記錄 turn 的累積量。
-- Cache ratio：最新 turn cached input ÷ input。
-- Context ratio：最新 turn 中已記錄 request 的最大 input ÷ model context window；缺少 window 時顯示 `N/A`。
-- Tool calls：`response_item` 中型別以 `_call` 結尾的事件，依 call ID 去重；只輸出數量。
-- Cost：未配置費率，固定為 `N/A`。
-- Next：依最新 context、turn/token 與 tool-call 門檻回傳 Continue、Summarize、Start fresh 或 Split task。
+- Task usage: the latest turn with token usage in the selected rollout.
+- Conversation usage: cumulative usage across all recorded turns in the selected rollout.
+- Cache ratio: cached input divided by input for the latest turn.
+- Context ratio: the largest recorded request input in the latest turn divided by the model context window. Displays `N/A` when the window is unavailable.
+- Tool calls: events in `response_item` whose type ends in `_call`, deduplicated by call ID. Only the count is reported.
+- Cost: always `N/A` because no rates are configured.
+- Next action: `Continue`, `Summarize`, `Start fresh`, or `Split task`, based on context, turn/token, and tool-call thresholds.
 
-## 事件優先序
+## Event Priority
 
-1. 新格式 `token_usage_record.payload.usage`：每筆代表一個模型回應，使用 `response_id` 去重。
-2. 舊格式 `event_msg` 且 `payload.type == token_count`：使用 `payload.info.last_token_usage`；不把累計性的 `total_token_usage` 當成單回合用量。
-3. 同一回應同時有兩種格式時，以 `token_usage_record` 為主，依 turn 與 token 欄位值去掉對應的舊格式副本。
+1. New format, `token_usage_record.payload.usage`: each record represents one model response and is deduplicated by `response_id`.
+2. Legacy format, `event_msg` with `payload.type == token_count`: reads `payload.info.last_token_usage`; cumulative `total_token_usage` is not treated as per-turn usage.
+3. If both formats describe the same response, `token_usage_record` takes precedence. Matching legacy duplicates are removed using the turn and token field values.
 
-只採用 rollout 已記錄的數值。缺少 usage、無法解析的尾端行或未知 schema 不會補估。`total_tokens` 欄位缺少或為零時，以 input + output 計算。Cache input 與 reasoning output 分別是 input/output 的子集，不重複加總；cache write 獨立呈現，不再加入 input 或 total。
+Only values recorded in the rollout are used. Missing usage, an unparsable trailing line, or an unknown schema is not estimated. If `total_tokens` is missing or zero, it is calculated as input plus output. Cached input and reasoning output are subsets of input and output, respectively, and are not counted twice. Cache writes are reported separately and are not added again to input or total.
 
-## 隱私邊界
+## Privacy Boundary
 
-Hook 只將三行摘要輸出為 Codex `systemMessage`；原始 JSONL 文字不進入 hook 輸出、額外 log 或磁碟快取。Hook 不修改 Codex rollout、不啟動 HTTP server，也不進行 runtime 網路呼叫。
+The Hook outputs only a three-line summary as a Codex `systemMessage`. Raw JSONL text is not included in Hook output, extra logs, or disk caches. The Hook does not modify Codex rollouts, start an HTTP server, or make runtime network requests.

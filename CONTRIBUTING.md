@@ -1,13 +1,13 @@
-# 貢獻指南
+# Contributing
 
-感謝你有意改善 Codex Usage Summary。提交變更前請先開 issue 說明問題或提案；小型文件修正可直接提交 pull request。
+Thank you for your interest in improving Codex Usage Summary. Before submitting a change, open an issue to describe the problem or proposal. Small documentation fixes may go directly into a pull request.
 
-## 開發流程
+## Development Workflow
 
-1. Fork repo 並建立用途明確的分支。
-2. 保持變更聚焦，避免提交個人 Codex rollout、prompt、工具輸出或帳戶資料。
-3. 執行測試：`python -m unittest discover -s tests -v`。
-4. 檢查 Python 語法：`python -m compileall -q source plugin tests`。
-5. Pull request 說明使用者可見影響、測試結果與任何相容性變化。
+1. Fork the repository and create a branch with a clear purpose.
+2. Keep changes focused. Do not commit personal Codex rollouts, prompts, tool output, or account data.
+3. Run the tests: `python -m unittest discover -s tests -v`.
+4. Check Python syntax: `python -m compileall -q source plugin tests`.
+5. In the pull request, describe user-visible impact, test results, and any compatibility changes.
 
-此工具解析 Codex 本機 rollout 格式；若修改 schema 假設，請附上不含私人對話內容的最小 fixture，並說明適用格式。
+This tool parses the local Codex rollout format. If you change schema assumptions, include a minimal fixture that contains no private conversation data and describe which format it covers.

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-import argparse
 import time
 from pathlib import Path
 import sys
@@ -131,24 +130,15 @@ def run_hook_event(codex_home: Path, hook_input: dict) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--hook", action="store_true", help=argparse.SUPPRESS)
-    parser.add_argument(
-        "--format", choices=("compact",), default="compact", help="輸出精簡摘要"
-    )
-    args = parser.parse_args()
     home = Path(os.environ.get("CODEX_HOME", Path.home() / ".codex")).expanduser()
-    if args.hook:
-        try:
-            hook_input = json.load(sys.stdin)
-            if not isinstance(hook_input, dict):
-                hook_input = {}
-            time.sleep(0.12)
-            output = run_hook_event(home, hook_input)
-        except Exception:
-            output = "{}"
-    else:
-        output = build_message(home, os.environ.get("CODEX_THREAD_ID", ""))
+    try:
+        hook_input = json.load(sys.stdin)
+        if not isinstance(hook_input, dict):
+            hook_input = {}
+        time.sleep(0.12)
+        output = run_hook_event(home, hook_input)
+    except Exception:
+        output = "{}"
     if output:
         print(output)
     return 0
