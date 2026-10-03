@@ -4,7 +4,7 @@ This project uses the Codex-compatible manifest at `.codex-plugin/plugin.json`. 
 
 ## Local Marketplace Example
 
-Clone this repository to a stable local path, then add the plugin entry to the local marketplace file used by Codex. Replace `<repository-path>` with the absolute path to the repository root. Escape Windows backslashes as `\\` in the JSON string. If a marketplace file already exists, merge this entry into its `plugins` array instead of replacing the file.
+Choose a local marketplace root and clone this repository into a directory beneath it. Set `source.path` to the plugin directory relative to that marketplace root, starting with `./`; keep the plugin directory inside the marketplace root. For example, if you clone this repository to `<marketplace-root>/plugins/Codex_Usage_Summary`, use `./plugins/Codex_Usage_Summary` below. Replace that example with the relative directory you actually use; do not put a machine-specific absolute path in the marketplace file. If a marketplace file already exists, merge this entry into its `plugins` array instead of replacing the file.
 
 ```json
 {
@@ -17,7 +17,7 @@ Clone this repository to a stable local path, then add the plugin entry to the l
       "name": "codex-usage-summary",
       "source": {
         "source": "local",
-        "path": "<repository-path>"
+        "path": "./plugins/Codex_Usage_Summary"
       },
       "policy": {
         "installation": "AVAILABLE",
