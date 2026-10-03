@@ -8,9 +8,7 @@ The Stop Hook reads `transcript_path` and `session_id` from the Codex hook event
 - Conversation usage: cumulative usage across all recorded turns in the selected rollout.
 - Cache ratio: cached input divided by input for the latest turn.
 - Context ratio: the largest recorded request input in the latest turn divided by the model context window. Displays `N/A` when the window is unavailable.
-- Tool calls: events in `response_item` whose type ends in `_call`, deduplicated by call ID. Only the count is reported.
-- Cost: always `N/A` because no rates are configured.
-- Next action: `Continue`, `Summarize`, `Start fresh`, or `Split task`, based on context, turn/token, and tool-call thresholds.
+- Tool calls: events in `response_item` whose type ends in `_call`, deduplicated by call ID. The output labels the current-task and conversation-wide counts explicitly.
 
 ## Event Priority
 
@@ -22,4 +20,4 @@ Only values recorded in the rollout are used. Missing usage, an unparsable trail
 
 ## Privacy Boundary
 
-The Hook outputs only a three-line summary as a Codex `systemMessage`. Raw JSONL text is not included in Hook output, extra logs, or disk caches. The Hook does not modify Codex rollouts, start an HTTP server, or make runtime network requests.
+The Hook outputs an aligned, seven-line usage summary as a Codex `systemMessage`: total tokens, input/output tokens, conversation tokens, cache ratio, context usage, and tool-call counts. Raw JSONL text is not included in Hook output, extra logs, or disk caches. The Hook does not modify Codex rollouts, start an HTTP server, or make runtime network requests.

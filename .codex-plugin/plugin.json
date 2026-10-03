@@ -10,6 +10,6 @@
   "interface": {
     "displayName": "Codex Usage Summary",
     "shortDescription": "Summarize local Codex usage",
-    "longDescription": "Display a compact three-line summary of local Codex token usage after each turn. It does not expose transcript text or make network requests."
+    "longDescription": "Display an aligned summary of local Codex token and tool-call usage after each turn. It does not expose transcript text or make network requests."
   }
 }

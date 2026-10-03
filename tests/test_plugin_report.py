@@ -16,7 +16,7 @@ from usage_hook import find_rollout, format_hook_message, run_hook, run_hook_eve
 
 
 class PluginReportTest(unittest.TestCase):
-    def test_hook_prints_compact_three_line_system_message_for_current_thread(self):
+    def test_hook_prints_aligned_labeled_usage_lines_for_current_thread(self):
         with tempfile.TemporaryDirectory() as temp:
             home = Path(temp)
             sessions = home / "sessions" / "2026" / "10" / "03"
@@ -55,10 +55,18 @@ class PluginReportTest(unittest.TestCase):
             output = run_hook(home, thread_id)
 
         message = json.loads(output)["systemMessage"]
-        self.assertIn("Total: 1.2K tokens (input 1K / output 200) | Conversation: 1.2K", message)
-        self.assertIn("Cache: 50.0% | Context: 25.0% (1K / 4K) | Tools: task 0 / conversation 0", message)
-        self.assertIn("Cost: N/A | Next: Continue", message)
-        self.assertEqual(len(message.splitlines()), 3)
+        self.assertEqual(
+            message.splitlines(),
+            [
+                "Usage",
+                "Total        1.2K tokens",
+                "Input        1K  | Output 200",
+                "Conversation tokens 1.2K",
+                "Cache        50.0%",
+                "Context      25.0% (1K / 4K)",
+                "Tool calls   task 0 / conversation 0",
+            ],
+        )
 
     def test_locates_rollout_from_nested_sessions_and_archived_sessions(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -96,9 +104,12 @@ class PluginReportTest(unittest.TestCase):
 
             output = run_hook_event(home, {"session_id": thread_id, "transcript_path": str(rollout)})
 
-        self.assertEqual(json.loads(output)["systemMessage"].splitlines()[0], "Total: 125 tokens (input 100 / output 25) | Conversation: 125")
+        self.assertEqual(
+            json.loads(output)["systemMessage"].splitlines()[1],
+            "Total        125 tokens",
+        )
 
-    def test_compact_format_keeps_action_line_short(self):
+    def test_aligned_format_omits_cost_and_next_action(self):
         summary = {
             "task_total_tokens": 100,
             "task_input_tokens": 80,
@@ -112,7 +123,8 @@ class PluginReportTest(unittest.TestCase):
             "next_action": "Summarize (context is growing)",
         }
         message = format_hook_message(summary)
-        self.assertEqual(message.splitlines()[-1], "Cost: N/A | Next: Summarize (context is growing)")
+        self.assertNotIn("Cost", message)
+        self.assertNotIn("Next", message)
 
 
 if __name__ == "__main__":

@@ -31,12 +31,9 @@ def format_percent(value: float | None) -> str:
 
 def format_hook_message(summary: dict) -> str:
     count = format_count
-    total = (
-        f"Total: {count(summary['task_total_tokens'])} tokens "
-        f"(input {count(summary['task_input_tokens'])} / "
-        f"output {count(summary['task_output_tokens'])})"
-    )
-    total += f" | Conversation: {count(summary['conversation_total_tokens'])}"
+    total = f"{count(summary['task_total_tokens'])} tokens"
+    input_tokens = count(summary["task_input_tokens"])
+    output_tokens = count(summary["task_output_tokens"])
     context = summary.get("context")
     context_percent = format_percent(context["ratio"] if context else None)
     context_counts = (
@@ -45,23 +42,16 @@ def format_hook_message(summary: dict) -> str:
         else "N/A"
     )
     cache = format_percent(summary.get("cache_ratio"))
-    tools = (
-        f"Tools: task {summary['task_tool_calls']} / "
-        f"conversation {summary['conversation_tool_calls']}"
-    )
-    action = summary["next_action"]
-    labels = {
-        "Continue": "Continue",
-        "Summarize (context is growing)": "Summarize (context is growing)",
-        "Start fresh": "Start fresh",
-        "Split task": "Split task",
-    }
-    action = labels.get(action, action)
+    tools = f"task {summary['task_tool_calls']} / conversation {summary['conversation_tool_calls']}"
     return "\n".join(
         (
-            total,
-            f"Cache: {cache} | Context: {context_percent} ({context_counts}) | {tools}",
-            f"Cost: N/A | Next: {action}",
+            "Usage",
+            f"Total        {total}",
+            f"Input        {input_tokens}  | Output {output_tokens}",
+            f"Conversation tokens {count(summary['conversation_total_tokens'])}",
+            f"Cache        {cache}",
+            f"Context      {context_percent} ({context_counts})",
+            f"Tool calls   {tools}",
         )
     )
 
