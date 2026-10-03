@@ -2,13 +2,13 @@
 
 本專案採用 Codex 相容 manifest：`.codex-plugin/plugin.json`，並以 `skills/usage-summary/SKILL.md` 提供手動用量摘要。`hooks/hooks.json` 在每回合停止時呼叫本機彙總程式；不啟動網頁 server。
 
-## 個人 local marketplace 範例
+## Local marketplace 範例
 
-在 `%USERPROFILE%\.agents\plugins\marketplace.json` 建立或合併下列 plugin entry。不要以此範例覆蓋既有 marketplace 檔案，也不要修改既有 `plugins` entries。
+先將本 repo 複製到本機固定路徑，再在 Codex 使用中的 local marketplace 檔案新增 plugin entry。把 `<repository-path>` 換成本機 repo 根目錄的絕對路徑；JSON 字串中的 Windows 反斜線需寫成 `\\`。若已有 marketplace，僅合併 `plugins` 陣列中的項目，不要覆蓋整份檔案。
 
 ```json
 {
-  "name": "brian-local",
+  "name": "local-plugins",
   "interface": {
     "displayName": "Local Plugins"
   },
@@ -21,7 +21,7 @@
       },
       "policy": {
         "installation": "AVAILABLE",
-      "authentication": "ON_INSTALL"
+        "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
     }

@@ -4,7 +4,7 @@
 
 ## 安裝
 
-需求：Codex plug-in 支援、Windows/macOS/Linux、Python 3.9+。本專案目前是 local marketplace package，安裝設定見 [`docs/codex-plugin.md`](docs/codex-plugin.md)。將 project 根目錄加入個人 local marketplace 後，在 Codex Plugins 安裝 **Codex Usage Summary**，開新 task 載入 Skill 與 Hook。
+需求：Codex plug-in 支援、Windows/macOS/Linux、Python 3.10+。可從 GitHub 複製 repo 後，以 Codex local marketplace 安裝；步驟見 [`docs/codex-plugin.md`](docs/codex-plugin.md)。安裝 **Codex Usage Summary** 後開新 task 載入 Skill 與 Hook。
 
 Stop Hook 需要在 Codex hooks 介面檢視並信任本機 command。若既有 Codex Usage Audit Stop Hook 同時啟用，會顯示兩份摘要；停用其中一個 Hook 可避免重複。
 
@@ -15,6 +15,8 @@ Total: 10.2K tokens (input 9.8K / output 400) | Conversation: 23.5K
 Cache: 75.0% | Context: 25.0% (64K / 256K) | Tools: task 7 / conversation 21
 Cost: N/A | Next: Summarize (context is growing)
 ```
+
+以上數值僅為格式示意。
 
 本版本未整合費率卡，因此顯示 `Cost: N/A`。建議沿用明確門檻規則；context 或 task 廣度增加時會顯示 Summarize、Start fresh 或 Split task。
 
@@ -40,3 +42,11 @@ Cost: N/A | Next: Summarize (context is growing)
 ├── tests/
 └── docs/
 ```
+
+## 授權
+
+本專案以 MIT License 授權，詳見 [`LICENSE`](LICENSE)。
+
+## 貢獻與安全回報
+
+貢獻方式見 [`CONTRIBUTING.md`](CONTRIBUTING.md)。安全問題請依 [`SECURITY.md`](SECURITY.md) 私下回報，請勿在公開 issue 張貼 rollout 或對話資料。
