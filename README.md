@@ -36,7 +36,7 @@ The values above are illustrative.
 ## Repository Structure
 
 ```text
-20261003_Codex_Usage_Summary/
+Codex_Usage_Summary/
 ├── .codex-plugin/plugin.json
 ├── hooks/hooks.json
 ├── plugin/scripts/usage_hook.py
